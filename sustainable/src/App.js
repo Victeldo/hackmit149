@@ -1,50 +1,25 @@
-import React, { useRef, useEffect } from "react";
-import { getPreciseDistance } from "geolib";
+import React from "react";
 import "./App.css";
+import Home from "./Home.js";
+import ClientHome from "./client-home.js";
+import AdminHome from "./admin-home.js";
+import SupplierHome from "./supplier-home.js";
+import ClientOrder from "./client-find-order.js";
+import SupplierOrder from "./supplier-find-order.js";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const AutoComplete = () => {
-  var loc = " ";
-  const autoCompleteRef = useRef();
-  const inputRef = useRef();
-  const options = {
-    fields: ["address_components", "geometry", "icon", "name"],
-  };
-  useEffect(() => {
-    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
-      inputRef.current,
-      options
-    );
-    autoCompleteRef.current.addListener("place_changed", async function () {
-      const place = await autoCompleteRef.current.getPlace();
-      loc = { place };
-    });
-  }, []);
-
-  function findDist() {
-    console.log(loc.place.geometry["location"].lat());
-    console.log(loc.place.geometry["location"].lng());
-    console.log(
-      getPreciseDistance(
-        { latitude: 42.3344051, longitude: -71.0658327 }, //Food bank placeholder coords
-        {
-          latitude: loc.place.geometry["location"].lat(),
-          longitude: loc.place.geometry["location"].lng(),
-        }
-      )
-    );
-  }
-
   return (
-    <div>
-      <label>enter address :</label>
-      <input
-        ref={inputRef}
-        onChange={(evt) => {
-          loc = evt.target.value;
-        }}
-      />
-      <button onClick={findDist}>Calculate Distance to Food Bank</button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<AdminHome />} />
+        <Route path="/client" element={<ClientHome />} />
+        <Route path="/supplier" element={<SupplierHome />} />
+        <Route path="corder" element={<ClientOrder />} />
+        <Route path="sorder" element={<SupplierOrder />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 export default AutoComplete;
